@@ -183,24 +183,29 @@
       </div>  
   </div>
   
-  <!--<div data-hook="admin_product_form_option_types">
-    <%#= f.field_container :option_types, class: ['form-group'] do %>
-      <%#= f.label :option_type_ids, Spree.t(:options_of_your_products) %>
+  <div data-hook="admin_product_form_option_types">
+    <%= f.field_container :option_types, class: ['form-group'] do %>
+      <%= f.label :option_type_ids, Spree.t(:options_of_your_products) %>
 
-      <%# if can? :modify, Spree::OptionType %>
-        <%#= f.hidden_field :option_type_ids, value: @product.option_type_ids.join(',') %>
-      <%# elsif @product.option_types.any? %>
+      <% if can? :modify, Spree::OptionType %>
+      <% if spree_current_user.admin? %>
+        <%= f.hidden_field :option_type_ids, value: @product.option_type_ids.join(',') %>
+        <% else %>
+<%= f.hidden_field :option_type_ids, value: Spree::OptionType.where(:supplier_id => spree_current_user.supplier_id).collect(&:id).join(',') %>
+        <% end %>
+      <% elsif @product.option_types.any? %>
         <ul class="text_list">
-          <%# @product.option_types.each do |type| %>
-            <li><%#= type.presentation %> (<%#= type.name %>)</li>
-          <%# end %>
+          
+          <% @product.option_types.each do |type| %>
+            <li><%= type.presentation %> (<%= type.name %>)</li>
+          <% end %>
         </ul>
-      <%# else %>
-        <div class="alert alert-info"><%#= Spree.t(:no_resource_found, resource: :option_types) %></div>
-      <%# end %>
+      <% else %>
+        <div class="alert alert-info"><%= Spree.t(:no_resource_found, resource: :option_types) %></div>
+      <% end %>
 
-    <%# end %>
-  </div>-->
+    <% end %>
+  </div>
 
   <!--<div data-hook="admin_product_form_tag_list">
     <%#= f.field_container :tag_list, class: ['form-group'] do %>

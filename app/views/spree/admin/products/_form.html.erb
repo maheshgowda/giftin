@@ -191,6 +191,7 @@
       <% if spree_current_user.admin? %>
         <%= f.hidden_field :option_type_ids, value: @product.option_type_ids.join(',') %>
         <% else %>
+        
 <%= f.hidden_field :option_type_ids, value: Spree::OptionType.where(:supplier_id => spree_current_user.supplier_id).collect(&:id).join(',') %>
         <% end %>
       <% elsif @product.option_types.any? %>
